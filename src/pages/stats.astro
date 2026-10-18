@@ -1,0 +1,104 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const posts = await getCollection("posts", ({ data }) => !data.draft);
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+// 总字数：正文去空白后字符数（中文按字计）
+const totalWords = posts.reduce(
+  (n, p) => n + (p.body ?? "").replace(/\s/g, "").length,
+  0
+);
+
+// 标签统计
+const tagCounts = new Map<string, number>();
+for (const p of posts) {
+  for (const tag of p.data.tags ?? []) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+const maxTag = tags[0]?.[1] ?? 1;
+
+// 写作天数：从最早一篇文章算起
+const first = posts
+  .map(p => new Date(p.data.pubDatetime).getTime())
+  .sort((a, b) => a - b)[0];
+const days = first
+  ? Math.max(1, Math.floor((Date.now() - first) / 86400000))
+  : 0;
+
+// 近 12 个月发文柱状
+const months: { label: string; count: number }[] = [];
+const now = new Date();
+for (let i = 11; i >= 0; i--) {
+  const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  const key = `${d.getFullYear()}-${d.getMonth()}`;
+  const count = posts.filter(p => {
+    const pd = new Date(p.data.pubDatetime);
+    return pd.getFullYear() === d.getFullYear() && pd.getMonth() === d.getMonth();
+  }).length;
+  months.push({ label: `${d.getMonth() + 1}月`, count });
+}
+const maxMonth = Math.max(1, ...months.map(m => m.count));
+---
+
+<Layout title={`${t.pages.statsTitle} | ${config.site.title}`}>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle={t.pages.statsTitle} pageDesc={t.pages.statsDesc}>
+    <ul class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      {[
+        [t.stats.posts, posts.length],
+        [t.stats.words, totalWords.toLocaleString("zh-CN")],
+        [t.stats.tags, tags.length],
+        [t.stats.days, days],
+      ].map(([label, value]) => (
+        <li class="border-border bg-background rounded-none border-2 p-5 text-center">
+          <div class="text-accent text-3xl font-bold">{value}</div>
+          <div class="text-muted-foreground mt-1 text-xs">{label}</div>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mt-10 mb-4 text-lg font-bold">{t.stats.byMonth}</h2>
+    <div class="flex h-32 items-end gap-2" role="img" aria-label={t.stats.byMonth}>
+      {months.map(m => (
+        <div class="flex flex-1 flex-col items-center gap-1" title={`${m.label}：${m.count}`}>
+          <div
+            class="bg-accent/70 w-full"
+            style={{ height: `${Math.max(m.count > 0 ? 6 : 2, (m.count / maxMonth) * 100)}%` }}
+          />
+          <span class="text-muted-foreground text-[10px]">{m.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="mt-10 mb-4 text-lg font-bold">{t.stats.tagCloud}</h2>
+    <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+      {tags.map(([tag, count]) => (
+        <a
+          href={`/tags/${tag}/`}
+          class="hover:text-accent text-muted-foreground"
+          style={{ fontSize: `${0.85 + (count / maxTag) * 0.6}rem` }}
+          title={`${count}`}
+        >
+          #{tag}
+        </a>
+      ))}
+    </div>
+  </Main>
+
+  <Footer />
+</Layout>
