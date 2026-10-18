@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://hezihezi.com/",
+    url: "https://blog.hezihezi.com/",
     title: "阳里禾子",
     description: "阳里禾子的个人博客：记录技术、生活与想法。",
     author: "阳里禾子",

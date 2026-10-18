@@ -1,6 +1,6 @@
 # 阳里禾子的博客
 
-基于 [AstroPaper](https://github.com/satnaing/astro-paper) 主题的个人博客，部署在 Cloudflare Pages：https://hezihezi.com
+基于 [AstroPaper](https://github.com/satnaing/astro-paper) 主题的个人博客，部署在 Cloudflare Pages：https://blog.hezihezi.com
 
 ## 写文章
 
@@ -34,4 +34,4 @@ pnpm build    # 构建（顺带生成搜索索引）
 
 ## 上线
 
-Cloudflare Pages 连本仓库：构建命令 `pnpm build`，输出目录 `dist`，自定义域名 `hezihezi.com`。
+Cloudflare Pages 连本仓库（Git 集成，`main` 分支）：构建命令 `pnpm build`，输出目录 `dist`，环境变量 `NODE_VERSION=22`，自定义域名 `blog.hezihezi.com`。
