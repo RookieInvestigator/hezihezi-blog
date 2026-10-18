@@ -1,24 +1,26 @@
 export interface Work {
   title: string;
   description: string;
-  /** 封面图（站内路径或完整 URL），缺省时显示渐变占位 */
+  /** 封面图（站内路径或完整 URL），缺省时只显示文字 */
   cover?: string;
   demo?: string;
   repo?: string;
-  tech: string[];
+  /** 这个作品的关键词，例如「亚文化爱好」「氛围编程」 */
+  tags: string[];
   period?: string;
+  /** 担任的角色，例如「内容贡献 · 网站制作」 */
+  role?: string;
 }
 
 export const works: Work[] = [
   {
-    title: "中文兔子洞冰山图",
-    description:
-      "社区共建的中文互联网怪谈、都市传说档案：1432 个词条的冰山图目录，含 3D 冰山、古籍线装书、术语表多视角浏览，收藏 / 评论 / 全文搜索一应俱全。",
-    cover: "https://iceberg.hezihezi.com/og-cover.png",
+    title: "中文兔子洞冰山图（重制版）",
+    description: "社区共建的中文怪谈、都市传说、未解之谜与冷知识档案。",
     demo: "https://iceberg.hezihezi.com",
     repo: "https://github.com/RookieInvestigator/iceberg_reforged",
-    tech: ["Vue 3", "Three.js", "Tailwind CSS", "Supabase"],
-    period: "2025 — 至今",
+    tags: ["亚文化爱好", "氛围编程"],
+    period: "2026 — 至今",
+    role: "内容贡献 · 网站制作",
   },
   // 加新作品照着下面复制一块：
   // {
@@ -26,7 +28,8 @@ export const works: Work[] = [
   //   description: "一句话介绍。",
   //   demo: "https://example.com",
   //   repo: "https://github.com/RookieInvestigator/xxx",
-  //   tech: ["Astro", "TypeScript"],
+  //   tags: ["关键词"],
   //   period: "2026",
+  //   role: "",
   // },
 ];

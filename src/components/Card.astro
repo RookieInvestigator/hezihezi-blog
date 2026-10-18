@@ -1,8 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
+import { slugifyStr } from "@/utils/slugify";
 import Datetime from "./Datetime.astro";
+import config from "@/config";
 
 type Props = {
   variant?: "h2" | "h3";
@@ -10,22 +13,39 @@ type Props = {
 
 const { variant: Heading = "h2", id, data, filePath } = Astro.props;
 
-const { title, description, ...props } = data;
+const { title, tags } = data;
+const locale = Astro.currentLocale ?? config.site.lang;
 ---
 
-<li class="my-6">
-  <a
-    href={getPostUrl(id, filePath, Astro.currentLocale)}
-    class:list={[
-      "text-accent inline-block text-lg font-medium",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
-    ]}
-  >
-    <Heading transition:name={toTransitionName(id)}>
-      {title}
-    </Heading>
-  </a>
-  <Datetime {...props} />
-  <p>{description}</p>
+<li class="flex items-center gap-2.5 py-2">
+  <Datetime
+    pubDatetime={data.pubDatetime}
+    modDatetime={data.modDatetime}
+    timezone={data.timezone}
+    format="YYYY/MM/DD"
+    class="shrink-0"
+  />
+  <div class="min-w-0 flex-1 truncate">
+    <a
+      href={getPostUrl(id, filePath, locale)}
+      transition:name={toTransitionName(id)}
+      class="hover-underline"
+    >
+      <Heading class="inline text-[15px] font-normal">{title}</Heading>
+    </a>
+  </div>
+  {
+    tags && tags.length > 0 && (
+      <div class="text-muted-foreground hidden shrink-0 items-center gap-2 text-xs sm:flex">
+        {tags.map(tag => (
+          <a
+            href={getRelativeLocaleUrl(locale, `tags/${slugifyStr(tag)}/`)}
+            class="hover-underline"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    )
+  }
 </li>

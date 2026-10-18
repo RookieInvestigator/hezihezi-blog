@@ -61,7 +61,7 @@ export default {
     worksTitle: "作品",
     worksDesc: "做过的东西，挑能看的放这里。",
     worksStack: "技术栈",
-    worksViewDemo: "在线演示",
+    worksViewDemo: "在线网站",
     worksViewRepo: "源代码",
   },
   stats: {

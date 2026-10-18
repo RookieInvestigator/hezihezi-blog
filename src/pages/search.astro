@@ -3,7 +3,6 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import "@pagefind/default-ui/css/ui.css";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import { getAssetPath } from "@/utils/withBase";
@@ -29,8 +28,6 @@ const t = useTranslations(locale);
 
 <Layout title={`${t.pages.searchTitle} | ${config.site.title}`}>
   <Header />
-
-  <Breadcrumb />
 
   <Main pageTitle={t.pages.searchTitle} pageDesc={t.pages.searchDesc}>
     <div
@@ -128,39 +125,48 @@ const t = useTranslations(locale);
     --pagefind-ui-text: var(--foreground);
     --pagefind-ui-background: var(--background);
     --pagefind-ui-border: var(--border);
-    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-primary: var(--foreground);
     --pagefind-ui-tag: var(--background);
-    --pagefind-ui-border-radius: 0.375rem;
+    --pagefind-ui-border-radius: 0px;
     --pagefind-ui-border-width: 1px;
     --pagefind-ui-image-border-radius: 0px;
     --pagefind-ui-image-box-ratio: 3 / 2;
 
     form::before {
-      background-color: var(--foreground);
+      background-color: var(--muted-foreground);
     }
 
     input {
       font-weight: 400;
-      border: 1px solid var(--border);
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      padding-inline: 0;
+      background: transparent;
     }
 
     input:focus-visible {
-      outline: 1px solid var(--accent);
+      outline: none;
+      border-color: var(--foreground);
     }
 
     .pagefind-ui__result-title a {
-      color: var(--accent);
-      outline-offset: 1px;
-      outline-color: var(--accent);
-      text-decoration-style: dashed;
+      color: var(--foreground);
+      text-decoration-line: underline;
+      text-decoration-thickness: 1px;
+      text-decoration-color: var(--border);
       text-underline-offset: 4px;
     }
 
     .pagefind-ui__result-title a:focus-visible,
     .pagefind-ui__search-clear:focus-visible {
-      text-decoration-line: none;
       outline-width: 2px;
-      outline-style: dashed;
+      outline-style: solid;
+      outline-color: var(--foreground);
+    }
+
+    .pagefind-ui__result {
+      border-top: 1px solid var(--border);
+      padding-block: 1rem;
     }
 
     .pagefind-ui__result:last-of-type {
@@ -169,6 +175,11 @@ const t = useTranslations(locale);
 
     .pagefind-ui__result-nested .pagefind-ui__result-link:before {
       font-family: system-ui;
+    }
+
+    .pagefind-ui__message,
+    .pagefind-ui__result-excerpt {
+      color: var(--muted-foreground);
     }
   }
 </style>

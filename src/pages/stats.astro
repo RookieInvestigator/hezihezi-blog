@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import { useTranslations } from "@/i18n";
@@ -42,7 +41,6 @@ const months: { label: string; count: number }[] = [];
 const now = new Date();
 for (let i = 11; i >= 0; i--) {
   const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-  const key = `${d.getFullYear()}-${d.getMonth()}`;
   const count = posts.filter(p => {
     const pd = new Date(p.data.pubDatetime);
     return pd.getFullYear() === d.getFullYear() && pd.getMonth() === d.getMonth();
@@ -55,48 +53,65 @@ const maxMonth = Math.max(1, ...months.map(m => m.count));
 <Layout title={`${t.pages.statsTitle} | ${config.site.title}`}>
   <Header />
 
-  <Breadcrumb />
-
   <Main pageTitle={t.pages.statsTitle} pageDesc={t.pages.statsDesc}>
-    <ul class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {[
-        [t.stats.posts, posts.length],
-        [t.stats.words, totalWords.toLocaleString("zh-CN")],
-        [t.stats.tags, tags.length],
-        [t.stats.days, days],
-      ].map(([label, value]) => (
-        <li class="border-border bg-background rounded-none border-2 p-5 text-center">
-          <div class="text-accent text-3xl font-bold">{value}</div>
-          <div class="text-muted-foreground mt-1 text-xs">{label}</div>
-        </li>
-      ))}
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+      {
+        [
+          [t.stats.posts, posts.length],
+          [t.stats.words, totalWords.toLocaleString("zh-CN")],
+          [t.stats.tags, tags.length],
+          [t.stats.days, days],
+        ].map(([label, value]) => (
+          <li>
+            <div class="text-2xl font-semibold tracking-tight tabular-nums">
+              {value}
+            </div>
+            <div class="text-muted-foreground mt-1 text-xs">{label}</div>
+          </li>
+        ))
+      }
     </ul>
 
-    <h2 class="mt-10 mb-4 text-lg font-bold">{t.stats.byMonth}</h2>
-    <div class="flex h-32 items-end gap-2" role="img" aria-label={t.stats.byMonth}>
-      {months.map(m => (
-        <div class="flex flex-1 flex-col items-center gap-1" title={`${m.label}：${m.count}`}>
+    <h2 class="mt-14 text-[15px] font-bold">{t.stats.byMonth}</h2>
+    <div
+      class="border-border mt-4 flex h-24 items-end gap-1.5 border-b pb-px"
+      role="img"
+      aria-label={t.stats.byMonth}
+    >
+      {
+        months.map(m => (
           <div
-            class="bg-accent/70 w-full"
-            style={{ height: `${Math.max(m.count > 0 ? 6 : 2, (m.count / maxMonth) * 100)}%` }}
-          />
-          <span class="text-muted-foreground text-[10px]">{m.label}</span>
-        </div>
-      ))}
+            class="flex flex-1 flex-col items-center gap-1.5 self-stretch justify-end"
+            title={`${m.label}：${m.count}`}
+          >
+            <div
+              class="bg-foreground/25 w-full"
+              style={{
+                height: `${Math.max(m.count > 0 ? 6 : 2, (m.count / maxMonth) * 100)}%`,
+              }}
+            />
+          </div>
+        ))
+      }
+    </div>
+    <div class="text-muted-foreground mt-2 flex gap-1.5 text-[10px]">
+      {months.map(m => <span class="flex-1 text-center">{m.label}</span>)}
     </div>
 
-    <h2 class="mt-10 mb-4 text-lg font-bold">{t.stats.tagCloud}</h2>
-    <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-      {tags.map(([tag, count]) => (
-        <a
-          href={`/tags/${tag}/`}
-          class="hover:text-accent text-muted-foreground"
-          style={{ fontSize: `${0.85 + (count / maxTag) * 0.6}rem` }}
-          title={`${count}`}
-        >
-          #{tag}
-        </a>
-      ))}
+    <h2 class="mt-14 text-[15px] font-bold">{t.stats.tagCloud}</h2>
+    <div class="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+      {
+        tags.map(([tag, count]) => (
+          <a
+            href={`/tags/${tag}/`}
+            class="text-muted-foreground transition-colors hover:text-foreground"
+            style={{ fontSize: `${0.85 + (count / maxTag) * 0.5}rem` }}
+            title={`${count}`}
+          >
+            #{tag}
+          </a>
+        ))
+      }
     </div>
   </Main>
 

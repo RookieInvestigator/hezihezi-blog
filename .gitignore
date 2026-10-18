@@ -29,5 +29,8 @@ public/pagefind
 # pnpm
 .pnpm-store
 
+# local preview screenshots
+.preview*/
+
 # docker compose
 compose.override.yaml

@@ -29,6 +29,7 @@ export default defineAstroPaperConfig({
   },
   socials: [
     { name: "github", url: "https://github.com/RookieInvestigator" },
+    { name: "bilibili", url: "https://space.bilibili.com/23370760" },
   ],
   shareLinks: [
     { name: "x",        url: "https://x.com/intent/post?url=" },
