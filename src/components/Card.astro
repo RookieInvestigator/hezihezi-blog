@@ -2,7 +2,6 @@
 import type { CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getPostUrl } from "@/utils/getPostPaths";
-import { toTransitionName } from "@/utils/toTransitionName";
 import { slugifyStr } from "@/utils/slugify";
 import Datetime from "./Datetime.astro";
 import config from "@/config";
@@ -28,7 +27,6 @@ const locale = Astro.currentLocale ?? config.site.lang;
   <div class="min-w-0 flex-1 truncate">
     <a
       href={getPostUrl(id, filePath, locale)}
-      transition:name={toTransitionName(id)}
       class="hover-underline"
     >
       <Heading class="inline text-[15px] font-normal">{title}</Heading>

@@ -8,7 +8,6 @@ import Tag from "@/components/Tag.astro";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
-import { toTransitionName } from "@/utils/toTransitionName";
 import EditPost from "./_components/EditPost.astro";
 import ShareLinks from "./_components/ShareLinks.astro";
 import BackToTopButton from "./_components/BackToTopButton.astro";
@@ -106,10 +105,7 @@ const ogImage = ogImageUrl
   <Header />
 
   <main id="main-content" class="app-layout pb-10" data-pagefind-body>
-    <h1
-      style={{ viewTransitionName: toTransitionName(post.id) }}
-      class="text-title text-[18px] leading-relaxed font-bold"
-    >
+    <h1 class="text-title text-[18px] leading-relaxed font-bold">
       {title}
     </h1>
 
